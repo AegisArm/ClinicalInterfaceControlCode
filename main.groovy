@@ -5,6 +5,18 @@ import com.neuronrobotics.bowlerstudio.scripting.ScriptingEngine;
 
 import java.lang.reflect.Type;
 
+Type TT_mapStringString = new TypeToken<HashMap<String, ArrayList< TransformNR >>>() {}.getType();
+Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+
+
+//Alternate method to load from a string
+//File	cachejson = ScriptingEngine.fileFromGit(myURL, filename)
+//String jsonString = null;
+//InputStream inPut = null;
+//inPut = FileUtils.openInputStream(cachejson);
+//jsonString = IOUtils.toString(inPut);											
+//HashMap<String, HashMap<String, Object>> database = gson.fromJson(jsonString, TT_mapStringString);
+// Reading Data
 
 println("starting");
 MobileBase base=DeviceManager.getSpecificDevice( "Standard6dof",{
