@@ -10,12 +10,12 @@ Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create()
 
 
 //Alternate method to load from a string
-//File	cachejson = ScriptingEngine.fileFromGit(myURL, filename)
-//String jsonString = null;
-//InputStream inPut = null;
-//inPut = FileUtils.openInputStream(cachejson);
-//jsonString = IOUtils.toString(inPut);											
-//HashMap<String, HashMap<String, Object>> database = gson.fromJson(jsonString, TT_mapStringString);
+File	cachejson = ScriptingEngine.fileFromGit("https://github.com/AegisArm/ClinicalInterfaceControlCode.git", "data.json")
+String jsonString = null;
+InputStream inPut = null;
+inPut = FileUtils.openInputStream(cachejson);
+jsonString = IOUtils.toString(inPut);											
+HashMap<String, ArrayList<TransformNR>> database = gson.fromJson(jsonString, TT_mapStringString);
 // Reading Data
 
 println("starting");
