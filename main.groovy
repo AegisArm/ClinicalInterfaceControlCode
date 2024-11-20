@@ -35,25 +35,74 @@ MobileBase base=DeviceManager.getSpecificDevice( "Standard6dof",{
 })
 
 DHParameterKinematics aegisArm = base.getAllDHChains().get(0);
-double zLift = 20;
-
-TransformNR offset = new TransformNR(0, 0, zLift);
-
 
 //Start from where the arm already is and move it from there with absolute location
-TransformNR current = aegisArm.calcHome().copy();
-//current.translateZ(zLift);
 
 
 
-for(double i = 0; i <= 1; i += 0.01){
-	TransformNR incre = offset.scale(i);
-	TransformNR temp = incre.times(current);//multiply offset by current
-	aegisArm.setDesiredTaskSpaceTransform(temp,  0);//change this value to smooth out motion
-	Thread.sleep(30); //wait 30 msec
-}
 // size of increment, and wait determine velocity of motion
 
+TransformNR translate(DHParameterKinematics arm, TransformNR home, float x, float y, float z){
+	TransformNR endPose = new TransformNR(x, y, z);
+	TransformNR startPose = home;
+
+	
+	for(double i = 0; i <= 1; i += 0.01){
+		TransformNR incre = endPose.scale(i);
+		TransformNR temp = incre.times(startPose);//multiply offset by current
+		arm.setDesiredTaskSpaceTransform(temp,  0);//change this value to smooth out motion
+		Thread.sleep(30); //wait 30 msec
+	}
+
+	return endPose;
+}
+
+TransformNR translate(DHParameterKinematics arm, TransformNR home, float x, float y, float z, float increment) throws IllegalArgumentException{
+	TransformNR endPose = new TransformNR(x, y, z);
+	TransformNR startPose = home;
+
+	if(increment > 1){
+		throw new IllegalArgumentException("increment > 1");
+	}
+	
+	for(double i = 0; i <= 1; i += increment){
+		TransformNR incre = endPose.scale(i);
+		TransformNR temp = incre.times(startPose);//multiply offset by current
+		arm.setDesiredTaskSpaceTransform(temp,  0);//change this value to smooth out motion
+		Thread.sleep(30); //wait 30 msec
+	}
+	
+	return endPose;
+}
+
+TransformNR translate(DHParameterKinematics arm, TransformNR home, TransformNR end, float increment) throws IllegalArgumentException{
+	TransformNR endPose = end;
+	TransformNR startPose = home;
+
+	if(increment > 1){
+		throw new IllegalArgumentException("increment > 1");
+	}
+	
+	for(double i = 0; i <= 1; i += increment){
+		TransformNR incre = endPose.scale(i);
+		TransformNR temp = incre.times(startPose);//multiply offset by current
+		arm.setDesiredTaskSpaceTransform(temp,  0);//change this value to smooth out motion
+		Thread.sleep(30); //wait 30 msec
+	}
+	
+	return endPose;
+}
+
+
+TransformNR home = aegisArm.calcHome().copy();
+
+TransformNR move = new TransformNR(30.0, 50.0, -50.0);
+
+TransformNR current = translate(aegisArm, home, move, 0.04);
+
+move = new TransformNR(0.0, 0.0, 10.0);
+
+current = translate(aegisArm, current, move, 0.04);
 
 
 return null;
