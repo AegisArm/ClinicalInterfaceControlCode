@@ -1,7 +1,14 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.neuronrobotics.bowlerstudio.creature.MobileBaseLoader
 import com.neuronrobotics.bowlerstudio.scripting.ScriptingEngine;
+import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics
+import com.neuronrobotics.sdk.addons.kinematics.MobileBase
+import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR
+import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR
+import com.neuronrobotics.sdk.common.DeviceManager
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -76,6 +83,7 @@ TransformNR translate(DHParameterKinematics arm, TransformNR home, float x, floa
 }
 
 TransformNR translate(DHParameterKinematics arm, TransformNR home, TransformNR end, float increment) throws IllegalArgumentException{
+
 	TransformNR endPose = end;
 	TransformNR startPose = home;
 
@@ -94,15 +102,16 @@ TransformNR translate(DHParameterKinematics arm, TransformNR home, TransformNR e
 }
 
 
+
 TransformNR home = aegisArm.calcHome().copy();
 
-TransformNR move = new TransformNR(30.0, 50.0, -50.0);
+TransformNR move = new TransformNR(30.0, 50.0, -50.0, new RotationNR(0, 0, 0));
 
 TransformNR current = translate(aegisArm, home, move, 0.04);
 
-move = new TransformNR(0.0, 0.0, 10.0);
+move = new TransformNR(0.0, 0.0, 0.0);
 
-current = translate(aegisArm, current, move, 0.04);
+current = translate(aegisArm, current, home, 0.04);
 
 
 return null;
