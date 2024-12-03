@@ -93,7 +93,7 @@ TransformNR translate(DHParameterKinematics arm, TransformNR home, TransformNR e
 	
 	for(double i = 0; i <= 1; i += increment){
 		TransformNR incre = endPose.scale(i);
-		TransformNR temp = incre.times(startPose);//multiply offset by current
+		TransformNR temp = startPose.times(incre);//multiply offset by current
 		try {
 			arm.setDesiredTaskSpaceTransform(temp,  0);//change this value to smooth out motion
 		} catch(Exception e) {
