@@ -94,7 +94,12 @@ TransformNR translate(DHParameterKinematics arm, TransformNR home, TransformNR e
 	for(double i = 0; i <= 1; i += increment){
 		TransformNR incre = endPose.scale(i);
 		TransformNR temp = incre.times(startPose);//multiply offset by current
-		arm.setDesiredTaskSpaceTransform(temp,  0);//change this value to smooth out motion
+		try {
+			arm.setDesiredTaskSpaceTransform(temp,  0);//change this value to smooth out motion
+		} catch(Exception e) {
+			println "try to go to " + endPose.toSimpleString();
+			e.printStackTrace();
+		}
 		Thread.sleep(30); //wait 30 msec
 	}
 	
@@ -102,16 +107,21 @@ TransformNR translate(DHParameterKinematics arm, TransformNR home, TransformNR e
 }
 
 
+final TransformNR startPose = aegisArm.calcHome().copy();
 
 TransformNR home = aegisArm.calcHome().copy();
 
-TransformNR move = new TransformNR(30.0, 50.0, -50.0, new RotationNR(0, 0, 0));
+TransformNR target = new TransformNR(0.0, 0.0, -15.0, new RotationNR(0, 20, 0));
 
-TransformNR current = translate(aegisArm, home, move, 0.04);
+TransformNR current = translate(aegisArm, home, target, 0.04);
 
-move = new TransformNR(0.0, 0.0, 0.0);
+Thread.sleep(500);
 
-current = translate(aegisArm, current, home, 0.04);
+home = current;
+
+target = startPose;
+
+current = translate(aegisArm, home, target, 0.04);
 
 
 return null;
